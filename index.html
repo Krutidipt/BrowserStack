@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+    <script>
+        var socket = io.connect('http://localhost:8080');
+        socket.on('message', function (data) {
+            //console.log(data)
+            var tail = document.getElementById('tail');
+            if(tail.childElementCount===0)
+                data.lines.forEach(element => {
+                    var node = document.createElement("LI");                 // Create a <li> node
+                    var textnode = document.createTextNode(element);         // Create a text node
+                    node.appendChild(textnode);                              // Append the text to <li>
+                    tail.appendChild(node);
+                });
+            else{
+                var c = tail.childNodes;
+                var i;
+                for(i=0;i<c.length;i++){
+                    if(c[i].innerText===data.lines[0])
+                        break;
+                }
+                for(var j=0;j<i;j++){
+                    tail.removeChild(tail.childNodes[j])
+                    n=data.lines.length
+                    var node = document.createElement("LI");                 // Create a <li> node
+                    var textnode = document.createTextNode(data.lines[n-1-j]);         // Create a text node
+                    node.appendChild(textnode);                              // Append the text to <li>
+                    tail.appendChild(node);
+                }
+            }
+        });
+    </script>
+  </head>
+  <body>
+    <div>
+      <p>Browserstack--</p>
+    </div>
+    <div>
+      <p>Here are the logs (tail -f):</p>
+    </div>
+    <div>
+      <p id="tail"></p>
+    </div>
+</html>
